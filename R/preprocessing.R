@@ -1168,6 +1168,8 @@ SampleUMI <- function(
 #' @param variable.features.rv.th Instead of setting a fixed number of variable features,
 #' use this residual variance cutoff; this is only used when \code{variable.features.n}
 #' is set to NULL; default is 1.3
+#' @param variable.features.rv.auto If set to TRUE the cutoff value of variable
+#' would be selected automatically; default is FALSE
 #' @param vars.to.regress Variables to regress out in a second non-regularized linear
 #' regression. For example, percent.mito. Default is NULL
 #' @param do.scale Whether to scale residuals to have unit variance; default is FALSE
@@ -1206,6 +1208,7 @@ SCTransform <- function(
   ncells = NULL,
   variable.features.n = 3000,
   variable.features.rv.th = 1.3,
+  variable.features.rv.auto = FALSE,
   vars.to.regress = NULL,
   do.scale = FALSE,
   do.center = TRUE,
@@ -1295,6 +1298,16 @@ SCTransform <- function(
   if (!is.null(x = variable.features.n)) {
     top.features <- names(x = feature.variance)[1:min(variable.features.n, length(x = feature.variance))]
   } else {
+    if (is.null(x = variable.features.rv.th))
+    {
+      variable.features.rv.th <- 1.3
+      variable.features.rv.auto <- TRUE
+    }
+    if (variable.features.rv.auto)
+    {
+      variable.features.rv.th <- max(Otsu(feature.variance), variable.features.rv.th)
+      message(paste("Select", round(variable.features.rv.th, 3), "as variable cutoff value automatically"))
+    }
     top.features <- names(x = feature.variance)[feature.variance >= variable.features.rv.th]
   }
   if (verbose) {

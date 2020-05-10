@@ -1118,3 +1118,37 @@ WhichCells <- function(object, ...) {
 WriteH5AD <- function(object, ...) {
   UseMethod(generic = 'WriteH5AD', object = object)
 }
+
+#' @param data An vector
+#'
+#' @return a cutoff value
+#'
+#' @rdname Otsu
+#'
+Otsu <- function(data)
+{
+	data <- data[order(data)]
+	u <- mean(data)
+	w0 <- 0
+	avgValue <- 0
+	histogram <- table(data)
+	histogram <- histogram/length(data)
+	threshold <- 0
+	maxVariance <- 0
+	for (i in 1:length(histogram))
+	{
+		level <- as.numeric(names(histogram[i]))
+		w0 <- w0+histogram[i]
+		avgValue <- avgValue+level*histogram[i]
+		t <- avgValue/w0-u
+		variance <- t*t*w0/(1 - w0)
+		if (w0 == 1) variance <- 0
+		if (variance > maxVariance)
+		{
+			maxVariance <- variance
+			threshold <- level
+		}
+	}
+	threshold
+ }
+ 

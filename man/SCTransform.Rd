@@ -12,6 +12,7 @@ SCTransform(
   ncells = NULL,
   variable.features.n = 3000,
   variable.features.rv.th = 1.3,
+  variable.features.rv.auto = TRUE,
   vars.to.regress = NULL,
   do.scale = FALSE,
   do.center = TRUE,
@@ -41,6 +42,9 @@ ranking by residual variance; default is 3000}
 \item{variable.features.rv.th}{Instead of setting a fixed number of variable features,
 use this residual variance cutoff; this is only used when \code{variable.features.n}
 is set to NULL; default is 1.3}
+
+\item{variable.features.rv.auto}{If set to TRUE the cutoff value of variable
+would be selected automatically; default is FALSE}
 
 \item{vars.to.regress}{Variables to regress out in a second non-regularized linear
 regression. For example, percent.mito. Default is NULL}
