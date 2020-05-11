@@ -12,7 +12,7 @@ SCTransform(
   ncells = NULL,
   variable.features.n = 3000,
   variable.features.rv.th = 1.3,
-  variable.features.rv.auto = TRUE,
+  variable.features.rv.auto = FALSE,
   vars.to.regress = NULL,
   do.scale = FALSE,
   do.center = TRUE,
