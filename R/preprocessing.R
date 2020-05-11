@@ -1295,17 +1295,14 @@ SCTransform <- function(
     message('Determine variable features')
   }
   feature.variance <- sort(x = feature.variance, decreasing = TRUE)
-  if (!is.null(x = variable.features.n)) {
+  if (!is.null(x = variable.features.n) & !variable.features.rv.auto) {
     top.features <- names(x = feature.variance)[1:min(variable.features.n, length(x = feature.variance))]
   } else {
-    if (is.null(x = variable.features.rv.th))
-    {
-      variable.features.rv.th <- 1.3
-      variable.features.rv.auto <- TRUE
-    }
+    if (is.null(x = variable.features.rv.th)) variable.features.rv.th <- 1.3
     if (variable.features.rv.auto)
     {
-      variable.features.rv.th <- max(Otsu(feature.variance), variable.features.rv.th)
+      variable.features.rv.th <- Otsu(feature.variance[which(feature.variance > quantile(feature.variance, 0.05) & 
+        feature.variance < quantile(feature.variance, 0.95))])
       message(paste("Select", round(variable.features.rv.th, 3), "as variable cutoff value automatically"))
     }
     top.features <- names(x = feature.variance)[feature.variance >= variable.features.rv.th]
